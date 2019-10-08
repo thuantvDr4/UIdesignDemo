@@ -6,7 +6,7 @@
  * @flow
  */
 
-import React, {useState} from 'react';
+import React, {useState, Fragment, useRef} from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -20,6 +20,7 @@ import {
 import {Container, Header, Content, Tab, Tabs} from 'native-base';
 import {TabView, TabBar, SceneMap} from 'react-native-tab-view';
 import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
+import * as Animatable from 'react-native-animatable';
 //==import file
 import Tab1 from './Tab1';
 import Tab2 from './Tab2';
@@ -29,6 +30,12 @@ import Tab5 from './Tab5';
 //=todo: BEGIN-MAIN
 const Main = () => {
   //=todo: BEGIN-SETUP CONST
+  const view1 = useRef(null);
+  const view2 = useRef(null);
+  const [defaultState, setDefaultState] = useState({
+    isShow: true,
+  });
+
   const [tabs, setTabs] = useState({
     index: 0,
     routes: [
@@ -43,15 +50,23 @@ const Main = () => {
   };
   //=todo: BEGIN-FUNCTION
   function _onSwipeUp(gestureState) {
-    alert('swipe up');
+    // alert('swipe up');
+    if (defaultState.isShow) {
+      setDefaultState({...defaultState, isShow: false});
+      view1.current.fadeInLeft(300);
+      view2.current.fadeInLeft(300);
+    }
   }
   function _onSwipeDown(gestureState) {
-    alert('swipe down');
+    // alert('swipe down');
+    if (!defaultState.isShow) {
+      return setDefaultState({...defaultState, isShow: true});
+    }
   }
 
   //=todo: BEGIN-RETURN
   return (
-    <>
+    <Fragment>
       <StatusBar barStyle="dark-content" />
       <GestureRecognizer
         onSwipeUp={_onSwipeUp}
@@ -59,7 +74,13 @@ const Main = () => {
         config={config}
         style={styles.container}>
         <SafeAreaView style={styles.container}>
-          <View style={{backgroundColor: 'blue', height: 80}} />
+          {defaultState.isShow && (
+            <Animatable.View
+              ref={view1}
+              style={{backgroundColor: 'blue', height: 80}}
+            />
+          )}
+
           <TabView
             swipeEnabled={true}
             animationEnabled={true}
@@ -87,10 +108,15 @@ const Main = () => {
             initialLayout={{width: Dimensions.get('window').width}}
           />
 
-          <View style={{backgroundColor: 'grey', height: 80}} />
+          {defaultState.isShow && (
+            <Animatable.View
+              ref={view2}
+              style={{backgroundColor: 'grey', height: 80}}
+            />
+          )}
         </SafeAreaView>
       </GestureRecognizer>
-    </>
+    </Fragment>
   );
 };
 
