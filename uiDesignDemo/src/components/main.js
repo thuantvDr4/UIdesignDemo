@@ -15,6 +15,7 @@ import {
   Text,
   StatusBar,
   Dimensions,
+  Animated
 } from 'react-native';
 //==import libs
 import {Container, Header, Content, Tab, Tabs} from 'native-base';
@@ -36,6 +37,12 @@ const Main = () => {
     isShow: true,
   });
 
+  const [values, setValues] = useState({
+    scrollY: new Animated.Value(0),
+  });
+
+
+
   const [tabs, setTabs] = useState({
     index: 0,
     routes: [
@@ -51,11 +58,6 @@ const Main = () => {
   //=todo: BEGIN-FUNCTION
   function _onSwipeUp(gestureState) {
     // alert('swipe up');
-    if (defaultState.isShow) {
-      setDefaultState({...defaultState, isShow: false});
-      view1.current.fadeInLeft(300);
-      view2.current.fadeInLeft(300);
-    }
   }
   function _onSwipeDown(gestureState) {
     // alert('swipe down');
